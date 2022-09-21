@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
+import { GameComponent } from "./GameComponent";
 import { ScoreForm } from "./ScoreForm";
 
 enum GameStatus {
@@ -18,7 +19,7 @@ export interface ScoreValue {
 
 export type Score = ScoreName & ScoreValue;
 
-interface Game {
+export interface Game {
   id: string;
   status: GameStatus;
   score: Score;
@@ -44,6 +45,16 @@ const ScoreBoard = () => {
     setGames((curr) => curr.concat(game));
   };
 
+  const finishGame = (gameFinished: Game) => {
+    // update the game without remove it for been used later in
+    // in summary
+    setGames((curr) =>
+      curr
+        .filter((game) => game.id !== gameFinished.id)
+        .concat({ ...gameFinished, status: GameStatus.Finished })
+    );
+  };
+
   return (
     <div>
       <h1>Football World Cup Score Board</h1>
@@ -51,16 +62,16 @@ const ScoreBoard = () => {
       <div>
         <h2>Matches</h2>
         <ul>
-          {/* TODO later will be replaced for a component */}
-          {games?.map((game) => (
-            // TODO replaced later for a Game component
-            <li key={game.id}>
-              <span>
-                {game.score.homeTeamName} {game.score.homeTeamScore} -{" "}
-                {game.score.awayTeamScore} {game.score.awayTeamName}
-              </span>
-            </li>
-          ))}
+          {games?.map(
+            (game) =>
+              game.status !== GameStatus.Finished && (
+                <GameComponent
+                  key={game.id}
+                  game={game}
+                  finishCallback={finishGame}
+                />
+              )
+          )}
         </ul>
       </div>
     </div>

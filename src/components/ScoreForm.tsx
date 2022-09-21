@@ -24,8 +24,6 @@ export const ScoreForm = ({ startGameCallback }: Props) => {
     <div>
       <div>
         <button onClick={startGame}>Start Game</button>
-        <button>Finish Game</button>
-        <button>Update Score</button>
         <button>Get Summary</button>
       </div>
       <div>
