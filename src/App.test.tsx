@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 import ScoreBoard from "./components/ScoreBoard";
 
@@ -22,4 +22,11 @@ describe("test scoreboard", () => {
     const items = screen.queryAllByRole('listitem');
     expect(items).toHaveLength(0);
   });
+
+  test("click in Start Game should create an item list", () => {
+    render(<ScoreBoard/>);
+    fireEvent.click(screen.getByText(/Start Game/i));
+    const items = screen.queryAllByRole('listitem');
+    expect(items).toHaveLength(1);
+  })
 });
