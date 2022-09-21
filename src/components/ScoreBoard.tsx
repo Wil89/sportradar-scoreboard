@@ -1,16 +1,23 @@
 import React, { useRef, useState } from "react";
+import { ScoreForm } from "./ScoreForm";
 
 enum GameStatus {
   Started,
   Finished,
 }
 
-interface Score {
+export interface ScoreName {
   homeTeamName: string;
-  homeTeamScore: number;
   awayTeamName: string;
+}
+
+export interface ScoreValue {
+  homeTeamScore: number;
   awayTeamScore: number;
 }
+
+export type Score = ScoreName & ScoreValue;
+
 interface Game {
   id: string;
   status: GameStatus;
@@ -27,23 +34,12 @@ interface ScoreBoard {
 
 const ScoreBoard = () => {
   const [games, setGames] = useState<Game[]>([]);
-  const homeNameRef = useRef<HTMLInputElement>(null);
-  const awayNameRef = useRef<HTMLInputElement>(null);
-  const homeScoreRef = useRef<HTMLInputElement>(null);
-  const awayScoreRef = useRef<HTMLInputElement>(null);
 
-  const startGame = () => {
-    const score: Score = {
-        homeTeamName: homeNameRef.current?.value || 'Home Team',
-        homeTeamScore: 0 ,
-        awayTeamName: awayNameRef.current?.value || 'Away Team',
-        awayTeamScore: 0
-    };
-
+  const startGame = (scoreName: ScoreName) => {
     const game: Game = {
       status: GameStatus.Started,
       id: new Date().getMilliseconds.toString(),
-      score: score,
+      score: { ...scoreName, homeTeamScore: 0, awayTeamScore: 0 },
     };
     setGames((curr) => curr.concat(game));
   };
@@ -51,36 +47,7 @@ const ScoreBoard = () => {
   return (
     <div>
       <h1>Football World Cup Score Board</h1>
-      <button onClick={startGame}>Start Game</button>
-      <button>Finish Game</button>
-      <button>Update Score</button>
-      <button>Get Summary</button>
-      <div>
-        <div>
-          <label htmlFor="homeName">Home Name</label>
-          <input type="text" name="homeName" id="homeName" ref={homeNameRef} />
-          <label htmlFor="homeScore">Home Score</label>
-          <input
-            type="number"
-            name="homeScore"
-            id="homeScore"
-            min={0}
-            ref={homeScoreRef}
-          />
-          <span> - </span>
-          <label htmlFor="awayName">Away Name</label>
-          <input type="text" name="awayName" id="awayName" ref={awayNameRef} />
-          <label htmlFor="awayScore">Away Score</label>
-          <input
-            type="number"
-            name="awayScore"
-            id="awayScore"
-            min={0}
-            ref={awayScoreRef}
-          />
-        </div>
-      </div>
-
+      <ScoreForm startGameCallback={startGame} />
       <div>
         <h2>Matches</h2>
         <ul>

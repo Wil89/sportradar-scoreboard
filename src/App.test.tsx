@@ -2,6 +2,7 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 import ScoreBoard from "./components/ScoreBoard";
+import userEvent from "@testing-library/user-event";
 
 describe("test scoreboard", () => {
   test("renders the score board presence in App", () => {
@@ -27,10 +28,13 @@ describe("test scoreboard", () => {
     expect(items).toHaveLength(0);
   });
 
-  test("click in Start Game should create an item list", () => {
+  test("click in Start Game should create an item list", async () => {
     render(<ScoreBoard/>);
+    await userEvent.type(screen.getByTestId('home-name'), 'Spain');
+    await userEvent.type(screen.getByTestId('away-name'), 'England');
     fireEvent.click(screen.getByText(/Start Game/i));
     const items = screen.queryAllByRole('listitem');
     expect(items).toHaveLength(1);
+    expect(screen.getByText(/Spain 0 - 0 England/i)).toBeInTheDocument();
   })
 });
