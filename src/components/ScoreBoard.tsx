@@ -39,19 +39,17 @@ const ScoreBoard = () => {
   const startGame = (scoreName: ScoreName) => {
     const game: Game = {
       status: GameStatus.Started,
-      id: new Date().getMilliseconds.toString(),
+      id: new Date().getMilliseconds().toString(),
       score: { ...scoreName, homeTeamScore: 0, awayTeamScore: 0 },
     };
-    setGames((curr) => curr.concat(game));
+    setGames((currState) => currState.concat(game));
   };
 
   const finishGame = (gameFinished: Game) => {
     // update the game without remove it for been used later in
     // in summary
-    setGames((curr) =>
-      curr
-        .filter((game) => game.id !== gameFinished.id)
-        .concat({ ...gameFinished, status: GameStatus.Finished })
+    setGames((currState) =>
+      currState.filter((game) => game.id !== gameFinished.id)
     );
   };
 
@@ -62,16 +60,13 @@ const ScoreBoard = () => {
       <div>
         <h2>Matches</h2>
         <ul>
-          {games?.map(
-            (game) =>
-              game.status !== GameStatus.Finished && (
-                <GameComponent
-                  key={game.id}
-                  game={game}
-                  finishCallback={finishGame}
-                />
-              )
-          )}
+          {games?.map((game) => (
+            <GameComponent
+              key={game.id}
+              game={game}
+              finishCallback={finishGame}
+            />
+          ))}
         </ul>
       </div>
     </div>
