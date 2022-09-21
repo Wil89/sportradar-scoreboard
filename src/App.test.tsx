@@ -14,6 +14,10 @@ describe("test scoreboard", () => {
     expect(screen.getByText(/Update Score/i)).toBeInTheDocument();
     expect(screen.getByText(/Get Summary/i)).toBeInTheDocument();
     expect(screen.getByText(/Matches/i)).toBeInTheDocument();
+    expect(screen.getByText(/Home Name/i)).toBeInTheDocument();
+    expect(screen.getByText(/Away Name/i)).toBeInTheDocument();
+    expect(screen.getByText(/Home Score/i)).toBeInTheDocument();
+    expect(screen.getByText(/Away Score/i)).toBeInTheDocument();
   });
 
   test("scoreboard initial empty state", () => {
