@@ -1,14 +1,16 @@
 import React, { useState, useRef } from "react";
-import { Game, Score } from "./ScoreBoard";
+import { Game, Score, StyledProps } from "../models/models";
+import styled from "styled-components";
+import { TeamName } from "./Summary";
 
-type Props = {
+interface Props extends StyledProps {
   game: Game;
   finishCallback: (game: Game) => void;
   updateCallBack: (game: Game, score: Score) => void;
-};
+}
 
-export const GameComponent = (props: Props): JSX.Element => {
-  const { game, finishCallback, updateCallBack } = props;
+const BasicGameComponent = (props: Props): JSX.Element => {
+  const { game, finishCallback, updateCallBack, className } = props;
   const [homeScore, setHomeScore] = useState<number>(game.score.homeTeamScore);
   const [awayScore, setAwayScore] = useState<number>(game.score.awayTeamScore);
 
@@ -37,32 +39,101 @@ export const GameComponent = (props: Props): JSX.Element => {
   };
 
   return (
-    <li>
+    <li className={className}>
       <div>
-        <span>{game.score.homeTeamName} </span>
-        <input
-          value={homeScore}
-          type="number"
-          name="homeTeamScore"
-          id="homeTeamScore"
-          min={game.score.homeTeamScore}
-          onChange={updateHomeScore}
-          data-testid="home-score"
-        />
-        {" - "}
-        <input
-          value={awayScore}
-          type="number"
-          name="awayTeamScore"
-          id="awayTeamScore"
-          min={game.score.awayTeamScore}
-          onChange={updateAwayScore}
-          data-testid="away-score"
-        />
-        <span> {game.score.awayTeamName}</span>
+        <div>
+          <TeamName alignRight>{game.score.homeTeamName} </TeamName>
+          <input
+            value={homeScore}
+            type="number"
+            name="homeTeamScore"
+            id="homeTeamScore"
+            min={game.score.homeTeamScore}
+            onChange={updateHomeScore}
+            data-testid="home-score"
+          />
+        </div>
+        <div>
+          <input
+            value={awayScore}
+            type="number"
+            name="awayTeamScore"
+            id="awayTeamScore"
+            min={game.score.awayTeamScore}
+            onChange={updateAwayScore}
+            data-testid="away-score"
+          />
+          <TeamName> {game.score.awayTeamName}</TeamName>
+        </div>
+      </div>
+      <div>
         <button onClick={update}>Update</button>
         <button onClick={finish}>Finish</button>
       </div>
     </li>
   );
 };
+
+export const GameComponent = styled(BasicGameComponent)`
+  display: flex;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+  padding: 1rem 0;
+
+  >div: first-of-type {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > div {
+        display: flex;
+        align-items: center;
+    }
+
+  }
+
+  input {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 4px;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  input:focus-visible {
+    outline: unset;
+  }
+
+  >div: last-of-type {
+    position: absolute;
+    right: 0;
+  }
+
+  span {
+    font-size: 1rem;
+    color: #ffffff;
+    width: 100px;
+    display: inline-block;
+  }
+
+  button {
+    border-radius: 4px;
+    border: none;
+    padding: 4px;
+  }
+  button: first-of-type {
+    margin-right: 4px;
+  }
+`;

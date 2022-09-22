@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 import ScoreBoard from "./components/ScoreBoard";
 import userEvent from "@testing-library/user-event";
-import { notDeepEqual } from "assert";
 
 describe("test scoreboard", () => {
   test("renders the score board presence in App", () => {
@@ -12,15 +11,16 @@ describe("test scoreboard", () => {
       screen.getByText(/Football World Cup Score Board/i)
     ).toBeInTheDocument();
     expect(screen.getByText(/Start Game/i)).toBeInTheDocument();
-    expect(screen.getByText(/Get Summary/i)).toBeInTheDocument();
-    expect(screen.getByText(/Matches/i)).toBeInTheDocument();
-    expect(screen.getByText(/Home Name/i)).toBeInTheDocument();
-    expect(screen.getByText(/Away Name/i)).toBeInTheDocument();
+    expect(screen.getByText(/Summary/i)).toBeInTheDocument();
+    expect(screen.getByText(/Home Team/i)).toBeInTheDocument();
+    expect(screen.getByText(/Away Team/i)).toBeInTheDocument();
   });
 
   test("scoreboard initial empty state", () => {
     render(<ScoreBoard />);
-    expect(screen.getByRole("list")).toBeInTheDocument();
+    expect(screen.getByText(/No games today/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Matches/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
     const items = screen.queryAllByRole("listitem");
     expect(items).toHaveLength(0);
   });
@@ -30,6 +30,8 @@ describe("test scoreboard", () => {
     await userEvent.type(screen.getByTestId("home-name"), "Spain");
     await userEvent.type(screen.getByTestId("away-name"), "England");
     fireEvent.click(screen.getByText(/Start Game/i));
+    expect(screen.getByText(/Matches/i)).toBeInTheDocument();
+    expect(screen.queryByText(/No games today/i)).not.toBeInTheDocument();
     const items = screen.queryAllByRole("listitem");
     expect(items).toHaveLength(1);
     expect(screen.getByText(/Spain/i)).toBeInTheDocument();
@@ -79,5 +81,4 @@ describe("test scoreboard", () => {
     expect(screen.getByTestId("home-score")).toHaveValue(0);
     expect(screen.getByTestId("away-score")).toHaveValue(1);
   });
-
 });

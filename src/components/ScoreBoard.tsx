@@ -2,40 +2,18 @@ import React, { useState } from "react";
 import { GameComponent } from "./GameComponent";
 import { ScoreForm } from "./ScoreForm";
 import { Summary } from "./Summary";
+import {
+  Game,
+  GameStatus,
+  ScoreName,
+  ScoreValue,
+  Score,
+  StyledProps,
+} from "../models/models";
+import styled from "styled-components";
+import GameList from "./GameList";
 
-enum GameStatus {
-  Started,
-  Finished,
-}
-
-export interface ScoreName {
-  homeTeamName: string;
-  awayTeamName: string;
-}
-
-export interface ScoreValue {
-  homeTeamScore: number;
-  awayTeamScore: number;
-  global: number;
-}
-
-export type Score = ScoreName & ScoreValue;
-
-export interface Game {
-  id: string;
-  status: GameStatus;
-  score: Score;
-}
-
-interface ScoreBoard {
-  games: Game[];
-  startGame: () => void;
-  finishGame: () => void;
-  updateGame: (score: Score) => void;
-  getSummary: () => Game[];
-}
-
-const ScoreBoard = (): JSX.Element => {
+const BasicScoreBoard = ({ className }: StyledProps): JSX.Element => {
   const [games, setGames] = useState<Game[]>([]);
   const [summary, setSummary] = useState<Game[]>([]);
 
@@ -67,6 +45,13 @@ const ScoreBoard = (): JSX.Element => {
   };
 
   const updateGame = (game: Game, score: Score) => {
+    // safaty check avoid reducing score (NO VAR ALLOWED :D )
+    if (
+      game.score.homeTeamScore > score.homeTeamScore ||
+      game.score.awayTeamScore > score.awayTeamScore
+    ) {
+      return;
+    }
     const idx = games.indexOf(game);
     const updatedGame: Game = {
       ...game,
@@ -93,28 +78,47 @@ const ScoreBoard = (): JSX.Element => {
   };
 
   return (
-    <div>
+    <div className={className}>
       <h1>Football World Cup Score Board</h1>
       <ScoreForm
         startGameCallback={startGame}
         getSummaryCallback={getSummary}
       />
-      <div>
-        <h2>Matches</h2>
-        <ul>
-          {games?.map((game) => (
-            <GameComponent
-              key={game.id}
-              game={game}
-              finishCallback={finishGame}
-              updateCallBack={updateGame}
-            />
-          ))}
-        </ul>
-      </div>
+      {games.length > 0 ? (
+        <GameList
+          games={games}
+          finishCallback={finishGame}
+          updateCallBack={updateGame}
+        />
+      ) : (
+        <p>No games today</p>
+      )}
       {summary.length > 0 && <Summary summary={summary} />}
     </div>
   );
 };
+
+const ScoreBoard = styled(BasicScoreBoard)`
+  max-width: 500px;
+  min-width: 300px;
+  width: auto;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 8px;
+  background-image: linear-gradient(to top, #0ba360 0%, #3cba92 100%);
+  box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, 0.72);
+  > h1 {
+    text-align: center;
+    margin: 0;
+    font-size: 2rem;
+    color: #ffffff;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #ffffff;
+    text-align: center;
+  }
+`;
 
 export default ScoreBoard;
