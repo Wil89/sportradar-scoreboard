@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { FormEvent, useRef } from "react";
 import { Game, ScoreName } from "./ScoreBoard";
 
 type Props = {
@@ -6,23 +6,34 @@ type Props = {
   getSummaryCallback: () => void;
 };
 
-export const ScoreForm = ({ startGameCallback, getSummaryCallback }: Props): JSX.Element => {
+export const ScoreForm = ({
+  startGameCallback,
+  getSummaryCallback,
+}: Props): JSX.Element => {
   const homeNameRef = useRef<HTMLInputElement>(null);
   const awayNameRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const startGame = () => {
+  const startGame = (e: FormEvent) => {
+    e.preventDefault();
     const scoreName: ScoreName = {
       homeTeamName: homeNameRef.current?.value || "Home Team",
       awayTeamName: awayNameRef.current?.value || "Away Team",
     };
+    formRef.current?.reset();
     startGameCallback(scoreName);
   };
 
+  const summary = (e: FormEvent) => {
+    e.preventDefault()
+    getSummaryCallback();
+  }
+
   return (
-    <div>
+    <form ref={formRef}>
       <div>
         <button onClick={startGame}>Start Game</button>
-        <button onClick={getSummaryCallback}>Get Summary</button>
+        <button onClick={summary}>Get Summary</button>
       </div>
       <div>
         <label htmlFor="homeName">Home Name</label>
@@ -42,6 +53,6 @@ export const ScoreForm = ({ startGameCallback, getSummaryCallback }: Props): JSX
           data-testid="away-name"
         />
       </div>
-    </div>
+    </form>
   );
 };

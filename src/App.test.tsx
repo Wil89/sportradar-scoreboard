@@ -79,4 +79,5 @@ describe("test scoreboard", () => {
     expect(screen.getByTestId("home-score")).toHaveValue(0);
     expect(screen.getByTestId("away-score")).toHaveValue(1);
   });
+
 });

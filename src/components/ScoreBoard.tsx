@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { GameComponent } from "./GameComponent";
 import { ScoreForm } from "./ScoreForm";
+import { Summary } from "./Summary";
 
 enum GameStatus {
   Started,
@@ -39,6 +40,18 @@ const ScoreBoard = (): JSX.Element => {
   const [summary, setSummary] = useState<Game[]>([]);
 
   const startGame = (scoreName: ScoreName) => {
+    //check if any of the selected teams are already playing
+    if (
+      games.some(
+        (game) =>
+          game.score.awayTeamName === scoreName.homeTeamName ||
+          game.score.homeTeamName === scoreName.homeTeamName ||
+          game.score.awayTeamName === scoreName.awayTeamName ||
+          game.score.homeTeamName === scoreName.awayTeamName
+      )
+    ) {
+      return;
+    }
     const game: Game = {
       status: GameStatus.Started,
       id: new Date().getMilliseconds().toString(),
@@ -76,7 +89,7 @@ const ScoreBoard = (): JSX.Element => {
         }
       }
     }
-    console.log(result.reverse());
+    setSummary(result.reverse());
   };
 
   return (
@@ -99,6 +112,7 @@ const ScoreBoard = (): JSX.Element => {
           ))}
         </ul>
       </div>
+      {summary.length > 0 && <Summary summary={summary} />}
     </div>
   );
 };
