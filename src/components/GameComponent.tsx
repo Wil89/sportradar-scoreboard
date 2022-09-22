@@ -31,6 +31,7 @@ export const GameComponent = (props: Props): JSX.Element => {
       ...game.score,
       homeTeamScore: homeScore,
       awayTeamScore: awayScore,
+      global: homeScore + awayScore,
     };
     updateCallBack(game, updatedScore);
   };
@@ -38,11 +39,7 @@ export const GameComponent = (props: Props): JSX.Element => {
   return (
     <li>
       <div>
-        {/* <span>
-          {game.score.homeTeamName} {game.score.homeTeamScore} -{" "}
-          {game.score.awayTeamScore} {game.score.awayTeamName}
-        </span> */}
-        <span>{game.score.homeTeamName}{" "}</span>
+        <span>{game.score.homeTeamName} </span>
         <input
           value={homeScore}
           type="number"
@@ -62,7 +59,7 @@ export const GameComponent = (props: Props): JSX.Element => {
           onChange={updateAwayScore}
           data-testid="away-score"
         />
-        <span>{" "}{game.score.awayTeamName}</span>
+        <span> {game.score.awayTeamName}</span>
         <button onClick={update}>Update</button>
         <button onClick={finish}>Finish</button>
       </div>

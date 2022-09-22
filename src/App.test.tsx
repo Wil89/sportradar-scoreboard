@@ -34,8 +34,8 @@ describe("test scoreboard", () => {
     expect(items).toHaveLength(1);
     expect(screen.getByText(/Spain/i)).toBeInTheDocument();
     expect(screen.getByText(/England/i)).toBeInTheDocument();
-    expect(screen.getByTestId('home-score')).toHaveValue(0);
-    expect(screen.getByTestId('away-score')).toHaveValue(0);
+    expect(screen.getByTestId("home-score")).toHaveValue(0);
+    expect(screen.getByTestId("away-score")).toHaveValue(0);
     expect(screen.getAllByText(/Finish/i)).toHaveLength(1);
     expect(screen.getAllByText(/Update/i)).toHaveLength(1);
   });
@@ -49,13 +49,14 @@ describe("test scoreboard", () => {
     expect(items).toHaveLength(1);
     expect(screen.getByText(/Spain/i)).toBeInTheDocument();
     expect(screen.getByText(/England/i)).toBeInTheDocument();
-    expect(screen.getByTestId('home-score')).toHaveValue(0);
-    expect(screen.getByTestId('away-score')).toHaveValue(0);
+    expect(screen.getByTestId("home-score")).toHaveValue(0);
+    expect(screen.getByTestId("away-score")).toHaveValue(0);
     expect(screen.getAllByText(/Finish/i)).toHaveLength(1);
     expect(screen.getAllByText(/Update/i)).toHaveLength(1);
     // Finish a game
     fireEvent.click(screen.getByText(/Finish/i));
-    expect(screen.queryByText(/Spain 0 - 0 England/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Spain/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/England/i)).not.toBeInTheDocument();
   });
 
   test("update game", async () => {
@@ -67,15 +68,15 @@ describe("test scoreboard", () => {
     expect(items).toHaveLength(1);
     expect(screen.getByText(/Spain/i)).toBeInTheDocument();
     expect(screen.getByText(/England/i)).toBeInTheDocument();
-    expect(screen.getByTestId('home-score')).toHaveValue(0);
-    expect(screen.getByTestId('away-score')).toHaveValue(0);
+    expect(screen.getByTestId("home-score")).toHaveValue(0);
+    expect(screen.getByTestId("away-score")).toHaveValue(0);
     expect(screen.getAllByText(/Finish/i)).toHaveLength(1);
     expect(screen.getAllByText(/Update/i)).toHaveLength(1);
     //Update a game
-    await userEvent.type(screen.getByTestId("home-score"), '0');
-    await userEvent.type(screen.getByTestId("away-score"), '1');
+    await userEvent.type(screen.getByTestId("home-score"), "0");
+    await userEvent.type(screen.getByTestId("away-score"), "1");
     fireEvent.click(screen.getByText(/Update/i));
-    expect(screen.getByTestId('home-score')).toHaveValue(0);
-    expect(screen.getByTestId('away-score')).toHaveValue(1);
+    expect(screen.getByTestId("home-score")).toHaveValue(0);
+    expect(screen.getByTestId("away-score")).toHaveValue(1);
   });
 });

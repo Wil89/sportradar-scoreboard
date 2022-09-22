@@ -15,6 +15,7 @@ export interface ScoreName {
 export interface ScoreValue {
   homeTeamScore: number;
   awayTeamScore: number;
+  global: number;
 }
 
 export type Score = ScoreName & ScoreValue;
@@ -35,12 +36,13 @@ interface ScoreBoard {
 
 const ScoreBoard = (): JSX.Element => {
   const [games, setGames] = useState<Game[]>([]);
+  const [summary, setSummary] = useState<Game[]>([]);
 
   const startGame = (scoreName: ScoreName) => {
     const game: Game = {
       status: GameStatus.Started,
       id: new Date().getMilliseconds().toString(),
-      score: { ...scoreName, homeTeamScore: 0, awayTeamScore: 0 },
+      score: { ...scoreName, homeTeamScore: 0, awayTeamScore: 0, global: 0 },
     };
     setGames((currState) => currState.concat(game));
   };
@@ -63,7 +65,18 @@ const ScoreBoard = (): JSX.Element => {
   };
 
   const getSummary = () => {
-    
+    // buble sort
+    let result = [...games];
+    for (let i = 0; i < result.length; i++) {
+      for (let j = 0; j < result.length - i - 1; j++) {
+        if (result[j].score.global > result[j + 1].score.global) {
+          let temp = result[j];
+          result[j] = result[j + 1];
+          result[j + 1] = temp;
+        }
+      }
+    }
+    console.log(result.reverse());
   };
 
   return (
