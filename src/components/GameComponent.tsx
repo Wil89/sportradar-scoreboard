@@ -132,6 +132,7 @@ export const GameComponent = styled(BasicGameComponent)`
     border-radius: 4px;
     border: none;
     padding: 4px;
+    cursor: pointer;
   }
   button: first-of-type {
     margin-right: 4px;

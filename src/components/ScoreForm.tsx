@@ -109,6 +109,7 @@ export const ScoreForm = styled(BasicScoreForm)`
       padding: 0.5rem 1rem;
       border-radius: 20px;
       font-size: 1rem;
+      cursor: pointer;
     }
   }
 
