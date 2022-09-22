@@ -1,16 +1,14 @@
 import React, { useRef } from "react";
-import { ScoreName } from "./ScoreBoard";
-
+import { Game, ScoreName } from "./ScoreBoard";
 
 type Props = {
   startGameCallback: (score: ScoreName) => void;
+  getSummaryCallback: () => void;
 };
 
-export const ScoreForm = ({ startGameCallback }: Props) => {
+export const ScoreForm = ({ startGameCallback, getSummaryCallback }: Props): JSX.Element => {
   const homeNameRef = useRef<HTMLInputElement>(null);
   const awayNameRef = useRef<HTMLInputElement>(null);
-  const homeScoreRef = useRef<HTMLInputElement>(null);
-  const awayScoreRef = useRef<HTMLInputElement>(null);
 
   const startGame = () => {
     const scoreName: ScoreName = {
@@ -24,29 +22,24 @@ export const ScoreForm = ({ startGameCallback }: Props) => {
     <div>
       <div>
         <button onClick={startGame}>Start Game</button>
-        <button>Get Summary</button>
+        <button onClick={getSummaryCallback}>Get Summary</button>
       </div>
       <div>
         <label htmlFor="homeName">Home Name</label>
-        <input type="text" name="homeName" id="homeName" ref={homeNameRef} data-testid="home-name" />
-        <label htmlFor="homeScore">Home Score</label>
         <input
-          type="number"
-          name="homeScore"
-          id="homeScore"
-          min={0}
-          ref={homeScoreRef}
+          type="text"
+          name="homeName"
+          id="homeName"
+          ref={homeNameRef}
+          data-testid="home-name"
         />
-        <span> - </span>
         <label htmlFor="awayName">Away Name</label>
-        <input type="text" name="awayName" id="awayName" ref={awayNameRef} data-testid="away-name"/>
-        <label htmlFor="awayScore">Away Score</label>
         <input
-          type="number"
-          name="awayScore"
-          id="awayScore"
-          min={0}
-          ref={awayScoreRef}
+          type="text"
+          name="awayName"
+          id="awayName"
+          ref={awayNameRef}
+          data-testid="away-name"
         />
       </div>
     </div>

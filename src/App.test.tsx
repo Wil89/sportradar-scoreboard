@@ -16,8 +16,6 @@ describe("test scoreboard", () => {
     expect(screen.getByText(/Matches/i)).toBeInTheDocument();
     expect(screen.getByText(/Home Name/i)).toBeInTheDocument();
     expect(screen.getByText(/Away Name/i)).toBeInTheDocument();
-    expect(screen.getByText(/Home Score/i)).toBeInTheDocument();
-    expect(screen.getByText(/Away Score/i)).toBeInTheDocument();
   });
 
   test("scoreboard initial empty state", () => {
@@ -34,7 +32,10 @@ describe("test scoreboard", () => {
     fireEvent.click(screen.getByText(/Start Game/i));
     const items = screen.queryAllByRole("listitem");
     expect(items).toHaveLength(1);
-    expect(screen.getByText(/Spain 0 - 0 England/i)).toBeInTheDocument();
+    expect(screen.getByText(/Spain/i)).toBeInTheDocument();
+    expect(screen.getByText(/England/i)).toBeInTheDocument();
+    expect(screen.getByTestId('home-score')).toHaveValue(0);
+    expect(screen.getByTestId('away-score')).toHaveValue(0);
     expect(screen.getAllByText(/Finish/i)).toHaveLength(1);
     expect(screen.getAllByText(/Update/i)).toHaveLength(1);
   });
@@ -46,11 +47,35 @@ describe("test scoreboard", () => {
     fireEvent.click(screen.getByText(/Start Game/i));
     const items = screen.queryAllByRole("listitem");
     expect(items).toHaveLength(1);
-    expect(screen.getByText(/Spain 0 - 0 England/i)).toBeInTheDocument();
+    expect(screen.getByText(/Spain/i)).toBeInTheDocument();
+    expect(screen.getByText(/England/i)).toBeInTheDocument();
+    expect(screen.getByTestId('home-score')).toHaveValue(0);
+    expect(screen.getByTestId('away-score')).toHaveValue(0);
     expect(screen.getAllByText(/Finish/i)).toHaveLength(1);
     expect(screen.getAllByText(/Update/i)).toHaveLength(1);
-
+    // Finish a game
     fireEvent.click(screen.getByText(/Finish/i));
     expect(screen.queryByText(/Spain 0 - 0 England/i)).not.toBeInTheDocument();
+  });
+
+  test("update game", async () => {
+    render(<ScoreBoard />);
+    await userEvent.type(screen.getByTestId("home-name"), "Spain");
+    await userEvent.type(screen.getByTestId("away-name"), "England");
+    fireEvent.click(screen.getByText(/Start Game/i));
+    const items = screen.queryAllByRole("listitem");
+    expect(items).toHaveLength(1);
+    expect(screen.getByText(/Spain/i)).toBeInTheDocument();
+    expect(screen.getByText(/England/i)).toBeInTheDocument();
+    expect(screen.getByTestId('home-score')).toHaveValue(0);
+    expect(screen.getByTestId('away-score')).toHaveValue(0);
+    expect(screen.getAllByText(/Finish/i)).toHaveLength(1);
+    expect(screen.getAllByText(/Update/i)).toHaveLength(1);
+    //Update a game
+    await userEvent.type(screen.getByTestId("home-score"), '0');
+    await userEvent.type(screen.getByTestId("away-score"), '1');
+    fireEvent.click(screen.getByText(/Update/i));
+    expect(screen.getByTestId('home-score')).toHaveValue(0);
+    expect(screen.getByTestId('away-score')).toHaveValue(1);
   });
 });

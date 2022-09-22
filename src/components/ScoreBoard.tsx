@@ -33,7 +33,7 @@ interface ScoreBoard {
   getSummary: () => Game[];
 }
 
-const ScoreBoard = () => {
+const ScoreBoard = (): JSX.Element => {
   const [games, setGames] = useState<Game[]>([]);
 
   const startGame = (scoreName: ScoreName) => {
@@ -46,17 +46,33 @@ const ScoreBoard = () => {
   };
 
   const finishGame = (gameFinished: Game) => {
-    // update the game without remove it for been used later in
-    // in summary
     setGames((currState) =>
       currState.filter((game) => game.id !== gameFinished.id)
     );
   };
 
+  const updateGame = (game: Game, score: Score) => {
+    const idx = games.indexOf(game);
+    const updatedGame: Game = {
+      ...game,
+      score: score,
+    };
+    const gamesCopy = [...games];
+    gamesCopy[idx] = updatedGame;
+    setGames(gamesCopy);
+  };
+
+  const getSummary = () => {
+    
+  };
+
   return (
     <div>
       <h1>Football World Cup Score Board</h1>
-      <ScoreForm startGameCallback={startGame} />
+      <ScoreForm
+        startGameCallback={startGame}
+        getSummaryCallback={getSummary}
+      />
       <div>
         <h2>Matches</h2>
         <ul>
@@ -65,6 +81,7 @@ const ScoreBoard = () => {
               key={game.id}
               game={game}
               finishCallback={finishGame}
+              updateCallBack={updateGame}
             />
           ))}
         </ul>
